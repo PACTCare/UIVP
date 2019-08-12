@@ -4,6 +4,10 @@
   using System.Security.Cryptography;
   using System.Threading.Tasks;
 
+  using Multiformats.Hash;
+
+  using Tangle.Net.Entity;
+
   using UIVP.Protocol.Core.Entity;
   using UIVP.Protocol.Core.Repository;
 
@@ -20,8 +24,8 @@
 
     public async Task<bool> IsValid(Invoice invoice)
     {
-      var hashedInvoice = DocumentHash.Create(invoice.Payload);
-      var invoiceEntry = await this.InvoiceRepository.LoadInvoiceInformationAsync(invoice.Hash);
+      var hashedInvoice = invoice.CreateHash(HashType.SHA2_256);
+      var invoiceEntry = await this.InvoiceRepository.LoadInvoiceInformationAsync(Hash.Empty);
 
       if (!hashedInvoice.SequenceEqual(invoiceEntry.InvoiceHash))
       {
@@ -32,7 +36,7 @@
       var key = CngKey.Import(companyPublicKey, CngKeyBlobFormat.EccFullPublicBlob);
       var signatureScheme = Encryption.CreateSignatureScheme(key);
 
-      return signatureScheme.VerifyData(invoice.Payload, invoiceEntry.InvoiceSignature);
+      return signatureScheme.VerifyData(invoice.Signature, invoiceEntry.InvoiceSignature);
     }
   }
 }

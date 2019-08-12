@@ -19,7 +19,7 @@
     /// The bundle hash of the published invoice hash.
     /// Needs to be attached to the invoice to be able to find it on the DLT
     /// </returns>
-    Task<TryteString> PublishInvoiceHashAsync(byte[] document, CngKey key);
+    Task<TryteString> PublishInvoiceHashAsync(Invoice invoice, CngKey key);
 
     /// <summary>
     /// Reads the hashed invoide and its signature from the tangle

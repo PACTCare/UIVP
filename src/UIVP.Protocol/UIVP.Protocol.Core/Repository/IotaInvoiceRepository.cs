@@ -5,6 +5,8 @@
   using System.Security.Cryptography;
   using System.Threading.Tasks;
 
+  using Multiformats.Hash;
+
   using Tangle.Net.Entity;
   using Tangle.Net.Repository;
   using Tangle.Net.Utils;
@@ -22,10 +24,10 @@
     }
 
     /// <inheritdoc />
-    public async Task<TryteString> PublishInvoiceHashAsync(byte[] document, CngKey key)
+    public async Task<TryteString> PublishInvoiceHashAsync(Invoice invoice, CngKey key)
     {
-      var payload = new InvoicePayload(DocumentHash.Create(document),
-        Encryption.CreateSignatureScheme(key).SignData(document));
+      var invoiceHash = invoice.CreateHash(HashType.SHA2_256);
+      var payload = new InvoicePayload(invoiceHash, Encryption.CreateSignatureScheme(key).SignData(invoiceHash));
 
       var bundle = new Bundle();
       bundle.AddTransfer(new Transfer

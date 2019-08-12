@@ -1,11 +1,21 @@
 ﻿namespace UIVP.Protocol.Core.Entity
 {
-  using Tangle.Net.Entity;
+  using System.Text;
+
+  using Multiformats.Hash;
 
   public class Invoice
   {
-    public Hash Hash { get; set; }
-    public byte[] Payload { get; set; }
+    public double Amount { get; set; }
+    public string BankAccountNumber { get; set; }
+    public string IssuerAddress { get; set; }
     public string KvkNumber { get; set; }
+    public byte[] Signature { get; set; }
+
+    public byte[] CreateHash(HashType algorithm)
+    {
+      var hashPayload = Encoding.UTF8.GetBytes($"{this.IssuerAddress}|{this.BankAccountNumber}|{this.Amount}|{this.KvkNumber}");
+      return Multihash.Sum(algorithm, hashPayload, 64);
+    }
   }
 }

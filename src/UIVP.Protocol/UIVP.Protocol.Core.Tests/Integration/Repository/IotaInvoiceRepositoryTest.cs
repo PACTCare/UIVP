@@ -11,6 +11,7 @@
   using Tangle.Net.Repository;
   using Tangle.Net.Repository.Client;
 
+  using UIVP.Protocol.Core.Entity;
   using UIVP.Protocol.Core.Repository;
   using UIVP.Protocol.Core.Services;
 
@@ -22,7 +23,12 @@
     public async Task TestPublish()
     {
       var repository = new IotaInvoiceRepository(IotaRepository);
-      var result = await repository.PublishInvoiceHashAsync(Encoding.UTF8.GetBytes("Somebody once told me, the world is gonna roll me"), Encryption.Create());
+      var result = await repository.PublishInvoiceHashAsync(
+                     new Invoice
+                       {
+                         KvkNumber = "1231455", IssuerAddress = "Somestreet 123, 1011AB Sometown", Amount = 9.99D, BankAccountNumber = "NLAKDJADKJHD"
+                       },
+                     Encryption.Create());
     }
 
     [TestMethod]

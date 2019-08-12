@@ -76,7 +76,7 @@
         }
       }
 
-      return new Invoice {Hash = Hash.Empty, KvkNumber = kvkNumber, Payload = Encoding.UTF8.GetBytes(bankAccount)};
+      return new Invoice { KvkNumber = kvkNumber, BankAccountNumber = bankAccount };
     }
 
     private static byte[] GetImageAsByteArray(string imageFilePath)
