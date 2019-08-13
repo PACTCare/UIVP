@@ -45,7 +45,7 @@
     }
 
     /// <inheritdoc />
-    protected override Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice)
+    public override Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice)
     {
       var address = TryteString.FromBytes(invoice.CreateHash(HashType.SHA2_256)).GetChunk(0, 81);
       return null;

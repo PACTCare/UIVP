@@ -44,9 +44,9 @@
 
     protected InvoiceMetadata HashAndSign(Invoice invoice, CngKey key)
     {
-      return new InvoiceMetadata { Hash = HashInvoice(invoice), Signature = Encryption.CreateSignatureScheme(key).SignData(invoice.Payload) };
+      return new InvoiceMetadata(HashInvoice(invoice),  Encryption.CreateSignatureScheme(key).SignData(invoice.Payload));
     }
 
-    protected abstract Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice);
+    public abstract Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice);
   }
 }

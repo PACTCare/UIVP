@@ -1,10 +1,11 @@
-﻿namespace UIVP.Protocol.Core.Tests.Integration.Repository
+﻿namespace UIVP.Protocol.Core.Iota.Tests.Repository
 {
   using System.Collections.Generic;
-  using System.Text;
   using System.Threading.Tasks;
 
   using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+  using Moq;
 
   using Tangle.Net.Entity;
   using Tangle.Net.ProofOfWork.Service;
@@ -12,6 +13,7 @@
   using Tangle.Net.Repository.Client;
 
   using UIVP.Protocol.Core.Entity;
+  using UIVP.Protocol.Core.Iota.Repository;
   using UIVP.Protocol.Core.Repository;
   using UIVP.Protocol.Core.Services;
 
@@ -22,20 +24,24 @@
     [TestMethod]
     public async Task TestPublish()
     {
-      var repository = new IotaInvoiceRepository(IotaRepository);
-      var result = await repository.PublishInvoiceHashAsync(
+      var repository = new IotaInvoiceRepository(IotaRepository, new Mock<IKvkRepository>().Object);
+      await repository.PublishInvoiceAsync(
                      new Invoice
                        {
                          KvkNumber = "1231455", IssuerAddress = "Somestreet 123, 1011AB Sometown", Amount = 9.99D, BankAccountNumber = "NLAKDJADKJHD"
                        },
-                     Encryption.Create());
+                     Encryption.CreateKey());
     }
 
     [TestMethod]
     public async Task TestReceive()
     {
-      var repository = new IotaInvoiceRepository(IotaRepository);
-      var result = await repository.LoadInvoiceInformationAsync(new Hash("LLFCHPDGDBFTYRXKYRGSZHZFAALOFFLQCIRKZLXWPGWOAGCHINWETHQYKGVTOECYKCGZWSPTNYGXDIYDX"));
+      var repository = new IotaInvoiceRepository(IotaRepository, new Mock<IKvkRepository>().Object);
+      var result = await repository.LoadInvoiceInformationAsync(
+                     new Invoice
+                       {
+                         KvkNumber = "1231455", IssuerAddress = "Somestreet 123, 1011AB Sometown", Amount = 9.99D, BankAccountNumber = "NLAKDJADKJHD"
+                       });
     }
 
     private static RestIotaRepository IotaRepository

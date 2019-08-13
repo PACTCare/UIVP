@@ -2,7 +2,13 @@
 {
   public class InvoiceMetadata
   {
-    public byte[] Hash { get; set; }
-    public byte[] Signature { get; set; }
+    public InvoiceMetadata(byte[] hash, byte[] signature)
+    {
+      this.Hash = hash;
+      this.Signature = signature;
+    }
+
+    public byte[] Hash { get; }
+    public byte[] Signature { get; }
   }
 }

@@ -24,11 +24,9 @@
         Encoding.UTF8.GetBytes("the world is gonna roll me"));
 
       var invoiceRepository = new Mock<InvoiceRepository>();
-      invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Hash>())).ReturnsAsync(dltPayload);
+      invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Invoice>())).ReturnsAsync(dltPayload);
 
-      var verificator = new InvoiceVerificator(invoiceRepository.Object, new Mock<IKvkRepository>().Object);
-      Assert.IsFalse(await verificator.IsValid(new Invoice
-        { KvkNumber = "123456789" }));
+      Assert.IsFalse(await invoiceRepository.Object.ValidateInvoiceAsync(new Invoice { KvkNumber = "123456789" }));
     }
 
     [TestMethod]
@@ -42,15 +40,13 @@
         signatureScheme.SignData(Encoding.UTF8.GetBytes("Somebody once told me the world is gonna roll me")));
 
       var invoiceRepository = new Mock<InvoiceRepository>();
-      invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Hash>())).ReturnsAsync(dltPayload);
+      invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Invoice>())).ReturnsAsync(dltPayload);
 
       var kvkRepository = new Mock<IKvkRepository>();
       kvkRepository.Setup(k => k.GetCompanyPublicKeyAsync(It.IsAny<string>()))
         .ReturnsAsync(signatureScheme.Key.Export(CngKeyBlobFormat.EccFullPublicBlob));
 
-      var verificator = new InvoiceVerificator(invoiceRepository.Object, kvkRepository.Object);
-
-      Assert.IsFalse(await verificator.IsValid(invoice));
+      Assert.IsFalse(await invoiceRepository.Object.ValidateInvoiceAsync(invoice));
     }
 
     [TestMethod]
@@ -64,15 +60,13 @@
         signatureScheme.SignData(invoice.CreateHash(HashType.SHA2_256)));
 
       var invoiceRepository = new Mock<InvoiceRepository>();
-      invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Hash>())).ReturnsAsync(dltPayload);
+      invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Invoice>())).ReturnsAsync(dltPayload);
 
       var kvkRepository = new Mock<IKvkRepository>();
       kvkRepository.Setup(k => k.GetCompanyPublicKeyAsync(It.IsAny<string>()))
         .ReturnsAsync(signatureScheme.Key.Export(CngKeyBlobFormat.EccFullPublicBlob));
 
-      var verificator = new InvoiceVerificator(invoiceRepository.Object, kvkRepository.Object);
-
-      Assert.IsTrue(await verificator.IsValid(invoice));
+      Assert.IsTrue(await invoiceRepository.Object.ValidateInvoiceAsync(invoice));
     }
   }
 }

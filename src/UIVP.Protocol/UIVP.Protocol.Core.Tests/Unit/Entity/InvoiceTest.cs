@@ -1,10 +1,11 @@
 ﻿namespace UIVP.Protocol.Core.Tests.Unit.Entity
 {
+  using System;
+  using System.Text;
+
   using Microsoft.VisualStudio.TestTools.UnitTesting;
 
   using Multiformats.Hash;
-
-  using Tangle.Net.Entity;
 
   using UIVP.Protocol.Core.Entity;
 
@@ -21,9 +22,7 @@
 
       var hash = invoice.CreateHash(HashType.SHA2_256);
 
-      Assert.AreEqual(
-        "R9JBIEQC99WEKG9ITCBIPEFESDGAGBBHBCNAKBEEWDIELHL9P9ADNCABWDW9MFPDTGBC9999999999999999999999999999999999999999999999999999999999999999",
-        TryteString.FromBytes(hash).Value);
+      Assert.AreEqual("EkCQYgCeyPNl9ZeNfyI92lMpQYyDkOQMEG1fN4MXr3zRUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Convert.ToBase64String(hash));
     }
   }
 }
