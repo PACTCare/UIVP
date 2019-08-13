@@ -1,5 +1,6 @@
 ﻿namespace UIVP.Protocol.Core.Repository
 {
+  using System;
   using System.Net;
   using System.Security.Cryptography;
   using System.Threading.Tasks;
@@ -7,8 +8,6 @@
   using Newtonsoft.Json;
 
   using RestSharp;
-
-  using Tangle.Net.Entity;
 
   public class RestKvkRepository : IKvkRepository
   {
@@ -33,17 +32,17 @@
       var parsedResponse = JsonConvert.DeserializeObject<JsonObject>(response.Content);
       parsedResponse.TryGetValue("publicKey", out var publicKey);
 
-      return publicKey != null ? new TryteString(publicKey.ToString()).ToBytes() : new byte[0];
+      return publicKey != null ? Convert.FromBase64String(publicKey.ToString()) : new byte[0];
     }
 
     /// <inheritdoc />
     public async Task RegisterCompanyPublicKeyAsync(string kvkNumber, CngKey key)
     {
       var publicKey = key.Export(CngKeyBlobFormat.EccFullPublicBlob);
-      var publicKeyPayload = TryteString.FromBytes(publicKey);
+      var publicKeyPayload = Convert.ToBase64String(publicKey);
 
       var request = new RestRequest($"api/PublicKeys/add/{kvkNumber}", Method.POST);
-      request.AddParameter("publicKey", publicKeyPayload.Value);
+      request.AddParameter("publicKey", publicKeyPayload);
 
       await this.Client.ExecuteTaskAsync(request);
     }

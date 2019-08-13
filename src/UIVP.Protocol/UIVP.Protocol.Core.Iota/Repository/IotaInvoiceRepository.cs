@@ -1,4 +1,4 @@
-﻿namespace UIVP.Protocol.Core.Repository
+﻿namespace UIVP.Protocol.Core.Iota.Repository
 {
   using System.Collections.Generic;
   using System.Linq;
@@ -12,9 +12,10 @@
   using Tangle.Net.Utils;
 
   using UIVP.Protocol.Core.Entity;
+  using UIVP.Protocol.Core.Repository;
   using UIVP.Protocol.Core.Services;
 
-  public class IotaInvoiceRepository : IInvoiceRepository
+  public class IotaInvoiceRepository : InvoiceRepository
   {
     private IIotaRepository IotaRepository { get; }
 

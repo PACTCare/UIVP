@@ -10,8 +10,6 @@
 
   using Multiformats.Hash;
 
-  using Tangle.Net.Entity;
-
   using UIVP.Protocol.Core.Entity;
   using UIVP.Protocol.Core.Repository;
   using UIVP.Protocol.Core.Services;
@@ -25,7 +23,7 @@
       var dltPayload = new InvoicePayload(Encoding.UTF8.GetBytes("Somebody once told me"),
         Encoding.UTF8.GetBytes("the world is gonna roll me"));
 
-      var invoiceRepository = new Mock<IInvoiceRepository>();
+      var invoiceRepository = new Mock<InvoiceRepository>();
       invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Hash>())).ReturnsAsync(dltPayload);
 
       var verificator = new InvoiceVerificator(invoiceRepository.Object, new Mock<IKvkRepository>().Object);
@@ -38,12 +36,12 @@
     {
       var invoice = new Invoice
         { KvkNumber = "123456789", Signature = Encoding.UTF8.GetBytes("Somebody once told me") };
-      var signatureScheme = Encryption.CreateSignatureScheme(Encryption.Create());
+      var signatureScheme = Encryption.CreateSignatureScheme();
 
       var dltPayload = new InvoicePayload(invoice.CreateHash(HashType.SHA2_256),
         signatureScheme.SignData(Encoding.UTF8.GetBytes("Somebody once told me the world is gonna roll me")));
 
-      var invoiceRepository = new Mock<IInvoiceRepository>();
+      var invoiceRepository = new Mock<InvoiceRepository>();
       invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Hash>())).ReturnsAsync(dltPayload);
 
       var kvkRepository = new Mock<IKvkRepository>();
@@ -60,12 +58,12 @@
     {
       var invoice = new Invoice
         { KvkNumber = "123456789", Signature = Encoding.UTF8.GetBytes("Somebody once told me") };
-      var signatureScheme = Encryption.CreateSignatureScheme(Encryption.Create());
+      var signatureScheme = Encryption.CreateSignatureScheme();
 
       var dltPayload = new InvoicePayload(invoice.CreateHash(HashType.SHA2_256),
         signatureScheme.SignData(invoice.CreateHash(HashType.SHA2_256)));
 
-      var invoiceRepository = new Mock<IInvoiceRepository>();
+      var invoiceRepository = new Mock<InvoiceRepository>();
       invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Hash>())).ReturnsAsync(dltPayload);
 
       var kvkRepository = new Mock<IKvkRepository>();

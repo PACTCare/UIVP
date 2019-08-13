@@ -4,19 +4,19 @@
 
   public static class Encryption
   {
-    public static CngKey Create()
+    public static CngKey CreateKey()
     {
       var keyCreationParameters = new CngKeyCreationParameters
-      {
-        ExportPolicy = CngExportPolicies.AllowPlaintextExport, KeyUsage = CngKeyUsages.Signing
-      };
+                                    {
+                                      ExportPolicy = CngExportPolicies.AllowPlaintextExport, KeyUsage = CngKeyUsages.Signing
+                                    };
 
       return CngKey.Create(CngAlgorithm.ECDsaP256, null, keyCreationParameters);
     }
 
-    public static ECDsaCng CreateSignatureScheme(CngKey key)
+    public static ECDsaCng CreateSignatureScheme(CngKey key = null, CngAlgorithm algorithm = null)
     {
-      return new ECDsaCng(key) { HashAlgorithm = CngAlgorithm.Sha256 };
+      return new ECDsaCng(key ?? CreateKey()) { HashAlgorithm = algorithm ?? CngAlgorithm.Sha256 };
     }
   }
 }

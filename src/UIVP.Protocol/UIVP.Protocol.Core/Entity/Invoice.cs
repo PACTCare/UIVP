@@ -10,7 +10,6 @@
     public string BankAccountNumber { get; set; }
     public string IssuerAddress { get; set; }
     public string KvkNumber { get; set; }
-    public byte[] Signature { get; set; }
 
     public byte[] CreateHash(HashType algorithm)
     {

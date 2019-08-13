@@ -21,7 +21,7 @@
       var client = new RestClient("https://localhost:44381");
       var repository = new RestKvkRepository(client);
 
-      var key = Encryption.Create();
+      var key = Encryption.CreateKey();
       await repository.RegisterCompanyPublicKeyAsync("242630600", key);
 
       var publicKey = await repository.GetCompanyPublicKeyAsync("242630600");

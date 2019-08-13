@@ -10,11 +10,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="RestSharp" Version="106.6.9" />
     <PackageReference Include="System.Security.Cryptography.Cng" Version="4.5.0" />
-    <PackageReference Include="Tangle.Net.Standard" Version="3.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Hash\" />
   </ItemGroup>
 
 </Project>
