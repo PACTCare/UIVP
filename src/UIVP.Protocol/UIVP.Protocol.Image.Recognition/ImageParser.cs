@@ -5,12 +5,9 @@
   using System.Linq;
   using System.Net.Http;
   using System.Net.Http.Headers;
-  using System.Text;
   using System.Threading.Tasks;
 
   using Newtonsoft.Json;
-
-  using Tangle.Net.Entity;
 
   using UIVP.Protocol.Core.Entity;
 

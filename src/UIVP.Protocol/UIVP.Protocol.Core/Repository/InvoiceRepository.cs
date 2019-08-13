@@ -18,14 +18,12 @@
 
     private IKvkRepository KvkRepository { get; }
 
-    protected abstract Task<InvoicePayload> LoadInvoiceInformationAsync(string storageAddress);
+    public abstract Task PublishInvoiceAsync(Invoice invoice, CngKey key);
 
-    public abstract Task<string> PublishInvoiceHashAsync(Invoice invoice, CngKey key);
-
-    public async Task<bool> ValidateInvoice(Invoice invoice)
+    public async Task<bool> ValidateInvoiceAsync(Invoice invoice)
     {
-      var hashedInvoice = invoice.CreateHash(HashType.SHA2_256);
-      var invoiceEntry = await this.LoadInvoiceInformationAsync(this.GenerateInvoiceAddress(invoice));
+      var hashedInvoice = HashInvoice(invoice);
+      var invoiceEntry = await this.LoadInvoiceInformationAsync(invoice);
 
       if (!hashedInvoice.SequenceEqual(invoiceEntry.Hash))
       {
@@ -36,9 +34,19 @@
       var key = CngKey.Import(companyPublicKey, CngKeyBlobFormat.EccFullPublicBlob);
       var signatureScheme = Encryption.CreateSignatureScheme(key);
 
-      return signatureScheme.VerifyData(hashedInvoice, invoiceEntry.Signature);
+      return signatureScheme.VerifyData(invoice.Payload, invoiceEntry.Signature);
     }
 
-    protected abstract string GenerateInvoiceAddress(Invoice invoice);
+    protected static byte[] HashInvoice(Invoice invoice)
+    {
+      return invoice.CreateHash(HashType.SHA2_256);
+    }
+
+    protected InvoiceMetadata HashAndSign(Invoice invoice, CngKey key)
+    {
+      return new InvoiceMetadata { Hash = HashInvoice(invoice), Signature = Encryption.CreateSignatureScheme(key).SignData(invoice.Payload) };
+    }
+
+    protected abstract Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice);
   }
 }

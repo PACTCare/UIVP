@@ -10,11 +10,11 @@
     public string BankAccountNumber { get; set; }
     public string IssuerAddress { get; set; }
     public string KvkNumber { get; set; }
+    public byte[] Payload => Encoding.UTF8.GetBytes($"{this.IssuerAddress}|{this.BankAccountNumber}|{this.Amount}|{this.KvkNumber}");
 
     public byte[] CreateHash(HashType algorithm)
     {
-      var hashPayload = Encoding.UTF8.GetBytes($"{this.IssuerAddress}|{this.BankAccountNumber}|{this.Amount}|{this.KvkNumber}");
-      return Multihash.Sum(algorithm, hashPayload, 64);
+      return Multihash.Sum(algorithm, this.Payload, 64);
     }
   }
 }
