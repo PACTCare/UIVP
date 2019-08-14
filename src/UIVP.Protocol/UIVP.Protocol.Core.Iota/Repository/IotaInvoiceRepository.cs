@@ -1,5 +1,7 @@
 ﻿namespace UIVP.Protocol.Core.Iota.Repository
 {
+  using System.Collections.Generic;
+  using System.Linq;
   using System.Security.Cryptography;
   using System.Threading.Tasks;
 
@@ -45,10 +47,16 @@
     }
 
     /// <inheritdoc />
-    public override Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice)
+    public override async Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice)
     {
       var address = TryteString.FromBytes(invoice.CreateHash(HashType.SHA2_256)).GetChunk(0, 81);
-      return null;
+      var transactionHashList = await this.IotaRepository.FindTransactionsByAddressesAsync(new List<Address> { new Address(address.Value) });
+      var transactionTrytes = await this.IotaRepository.GetTrytesAsync(transactionHashList.Hashes);
+      var metadataTrytePayload = transactionTrytes.Select(tt => Transaction.FromTrytes(tt)).OrderBy(t => t.CurrentIndex).ToList().Aggregate(
+        new TryteString(),
+        (current, tryteString) => current.Concat(tryteString.Fragment));
+      
+      return metadataTrytePayload.ToInvoiceMetadata();
     }
   }
 }
