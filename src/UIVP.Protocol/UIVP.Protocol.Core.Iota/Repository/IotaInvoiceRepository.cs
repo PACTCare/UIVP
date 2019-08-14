@@ -5,8 +5,6 @@
   using System.Security.Cryptography;
   using System.Threading.Tasks;
 
-  using Multiformats.Hash;
-
   using Tangle.Net.Entity;
   using Tangle.Net.Repository;
   using Tangle.Net.Utils;

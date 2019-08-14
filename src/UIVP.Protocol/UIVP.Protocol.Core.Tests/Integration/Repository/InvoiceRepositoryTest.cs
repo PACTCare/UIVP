@@ -13,60 +13,58 @@
   using UIVP.Protocol.Core.Entity;
   using UIVP.Protocol.Core.Repository;
   using UIVP.Protocol.Core.Services;
+  using UIVP.Protocol.Core.Tests.Integration.Repository;
 
   [TestClass]
-  public class InvoiceVerificatorTests
+  public class InvoiceRepositoryTest
   {
+    private Invoice Invoice =>
+      new Invoice
+        {
+          KvkNumber = "1231455", IssuerAddress = "Somestreet 123, 1011AB Sometown", Amount = 9.99D, BankAccountNumber = "NLAHJDGAJHDGJAHD"
+        };
+
     [TestMethod]
     public async Task TestInvoiceHashMismatchShouldReturnFalse()
     {
       var dltPayload = new InvoiceMetadata(Encoding.UTF8.GetBytes("Somebody once told me"),
         Encoding.UTF8.GetBytes("the world is gonna roll me"));
 
-      var invoiceRepository = new Mock<InvoiceRepository>();
-      invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Invoice>())).ReturnsAsync(dltPayload);
+      var invoiceRepository = new InMemoryInvoiceRepository(new Mock<IKvkRepository>().Object, dltPayload);
 
-      Assert.IsFalse(await invoiceRepository.Object.ValidateInvoiceAsync(new Invoice { KvkNumber = "123456789" }));
+      Assert.IsFalse(await invoiceRepository.ValidateInvoiceAsync(this.Invoice));
     }
 
     [TestMethod]
     public async Task TestSignatureMismatchShouldReturnFalse()
     {
-      var invoice = new Invoice
-        { KvkNumber = "123456789"  };
       var signatureScheme = Encryption.CreateSignatureScheme();
 
-      var dltPayload = new InvoiceMetadata(invoice.CreateHash(HashType.SHA2_256),
+      var dltPayload = new InvoiceMetadata(this.Invoice.CreateHash(HashType.SHA2_256),
         signatureScheme.SignData(Encoding.UTF8.GetBytes("Somebody once told me the world is gonna roll me")));
-
-      var invoiceRepository = new Mock<InvoiceRepository>();
-      invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Invoice>())).ReturnsAsync(dltPayload);
 
       var kvkRepository = new Mock<IKvkRepository>();
       kvkRepository.Setup(k => k.GetCompanyPublicKeyAsync(It.IsAny<string>()))
         .ReturnsAsync(signatureScheme.Key.Export(CngKeyBlobFormat.EccFullPublicBlob));
 
-      Assert.IsFalse(await invoiceRepository.Object.ValidateInvoiceAsync(invoice));
+      var invoiceRepository = new InMemoryInvoiceRepository(kvkRepository.Object, dltPayload);
+
+      Assert.IsFalse(await invoiceRepository.ValidateInvoiceAsync(this.Invoice));
     }
 
     [TestMethod]
     public async Task TestSignatureMatchShouldReturnTrue()
     {
-      var invoice = new Invoice
-        { KvkNumber = "123456789" };
       var signatureScheme = Encryption.CreateSignatureScheme();
-
-      var dltPayload = new InvoiceMetadata(invoice.CreateHash(HashType.SHA2_256),
-        signatureScheme.SignData(invoice.CreateHash(HashType.SHA2_256)));
-
-      var invoiceRepository = new Mock<InvoiceRepository>();
-      invoiceRepository.Setup(i => i.LoadInvoiceInformationAsync(It.IsAny<Invoice>())).ReturnsAsync(dltPayload);
 
       var kvkRepository = new Mock<IKvkRepository>();
       kvkRepository.Setup(k => k.GetCompanyPublicKeyAsync(It.IsAny<string>()))
         .ReturnsAsync(signatureScheme.Key.Export(CngKeyBlobFormat.EccFullPublicBlob));
 
-      Assert.IsTrue(await invoiceRepository.Object.ValidateInvoiceAsync(invoice));
+      var invoiceRepository = new InMemoryInvoiceRepository(kvkRepository.Object, null);
+      await invoiceRepository.PublishInvoiceAsync(this.Invoice, signatureScheme.Key);
+
+      Assert.IsTrue(await invoiceRepository.ValidateInvoiceAsync(this.Invoice));
     }
   }
 }

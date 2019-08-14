@@ -42,7 +42,7 @@
       return invoice.CreateHash(HashType.SHA2_256);
     }
 
-    protected InvoiceMetadata HashAndSign(Invoice invoice, CngKey key)
+    protected virtual InvoiceMetadata HashAndSign(Invoice invoice, CngKey key)
     {
       return new InvoiceMetadata(this.HashInvoice(invoice),  Encryption.CreateSignatureScheme(key).SignData(invoice.Payload));
     }
