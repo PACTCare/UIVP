@@ -4,14 +4,14 @@
 
   public static class Encryption
   {
-    public static CngKey CreateKey()
+    public static CngKey CreateKey(CngAlgorithm algorithm = null)
     {
       var keyCreationParameters = new CngKeyCreationParameters
                                     {
                                       ExportPolicy = CngExportPolicies.AllowPlaintextExport, KeyUsage = CngKeyUsages.Signing
                                     };
 
-      return CngKey.Create(CngAlgorithm.ECDsaP256, null, keyCreationParameters);
+      return CngKey.Create(algorithm ?? CngAlgorithm.ECDsaP256, null, keyCreationParameters);
     }
 
     public static ECDsaCng CreateSignatureScheme(CngKey key = null, CngAlgorithm algorithm = null)

@@ -34,7 +34,6 @@
       var expectedHash = invoice.CreateHash(HashType.SHA2_256);
 
       await repository.PublishInvoiceAsync(invoice, Encryption.CreateKey());
-
       var metadata = await repository.LoadInvoiceInformationAsync(invoice);
 
       Assert.AreEqual(Convert.ToBase64String(expectedHash), Convert.ToBase64String(metadata.Hash));

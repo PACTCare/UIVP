@@ -22,7 +22,7 @@
 
     public async Task<bool> ValidateInvoiceAsync(Invoice invoice)
     {
-      var hashedInvoice = HashInvoice(invoice);
+      var hashedInvoice = this.HashInvoice(invoice);
       var invoiceEntry = await this.LoadInvoiceInformationAsync(invoice);
 
       if (!hashedInvoice.SequenceEqual(invoiceEntry.Hash))
@@ -37,14 +37,14 @@
       return signatureScheme.VerifyData(invoice.Payload, invoiceEntry.Signature);
     }
 
-    protected static byte[] HashInvoice(Invoice invoice)
+    protected virtual byte[] HashInvoice(Invoice invoice)
     {
       return invoice.CreateHash(HashType.SHA2_256);
     }
 
     protected InvoiceMetadata HashAndSign(Invoice invoice, CngKey key)
     {
-      return new InvoiceMetadata(HashInvoice(invoice),  Encryption.CreateSignatureScheme(key).SignData(invoice.Payload));
+      return new InvoiceMetadata(this.HashInvoice(invoice),  Encryption.CreateSignatureScheme(key).SignData(invoice.Payload));
     }
 
     public abstract Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice);
