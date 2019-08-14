@@ -1,16 +1,15 @@
 ﻿namespace UIVP.Protocol.Core.Iota.Tests.Repository
 {
-  using System.Collections.Generic;
+  using System;
   using System.Threading.Tasks;
 
   using Microsoft.VisualStudio.TestTools.UnitTesting;
 
   using Moq;
 
+  using Multiformats.Hash;
+
   using Tangle.Net.Entity;
-  using Tangle.Net.ProofOfWork.Service;
-  using Tangle.Net.Repository;
-  using Tangle.Net.Repository.Client;
 
   using UIVP.Protocol.Core.Entity;
   using UIVP.Protocol.Core.Iota.Repository;
@@ -18,65 +17,27 @@
   using UIVP.Protocol.Core.Services;
 
   [TestClass]
-  [Ignore]
   public class IotaInvoiceRepositoryTest
   {
     [TestMethod]
-    public async Task TestPublish()
+    public async Task TestPublishReceiveFlow()
     {
-      var repository = new IotaInvoiceRepository(IotaRepository, new Mock<IKvkRepository>().Object);
-      await repository.PublishInvoiceAsync(
-                     new Invoice
-                       {
-                         KvkNumber = "1231455", IssuerAddress = "Somestreet 123, 1011AB Sometown", Amount = 9.99D, BankAccountNumber = "NLAKDJADKJHD"
-                       },
-                     Encryption.CreateKey());
-    }
+      var repository = new IotaInvoiceRepository(ResourceProvider.Repository, new Mock<IKvkRepository>().Object);
+      var invoice = new Invoice
+                      {
+                        KvkNumber = "1231455",
+                        IssuerAddress = "Somestreet 123, 1011AB Sometown",
+                        Amount = 9.99D,
+                        BankAccountNumber = Seed.Random().Value
+                      };
 
-    [TestMethod]
-    public async Task TestReceive()
-    {
-      var repository = new IotaInvoiceRepository(IotaRepository, new Mock<IKvkRepository>().Object);
-      var result = await repository.LoadInvoiceInformationAsync(
-                     new Invoice
-                       {
-                         KvkNumber = "1231455", IssuerAddress = "Somestreet 123, 1011AB Sometown", Amount = 9.99D, BankAccountNumber = "NLAKDJADKJHD"
-                       });
-    }
+      var expectedHash = invoice.CreateHash(HashType.SHA2_256);
 
-    private static RestIotaRepository IotaRepository
-    {
-      get
-      {
-        var iotaRepository = new RestIotaRepository(
-          new FallbackIotaClient(
-            new List<string>
-            {
-              "https://trinity.iota-tangle.io:14265",
-              "https://nodes.thetangle.org:443",
-              "http://iota1.heidger.eu:14265",
-              "https://nodes.iota.cafe:443",
-              "https://potato.iotasalad.org:14265",
-              "https://durian.iotasalad.org:14265",
-              "https://turnip.iotasalad.org:14265",
-              "https://nodes.iota.fm:443",
-              "https://tuna.iotasalad.org:14265",
-              "https://iotanode2.jlld.at:443",
-              "https://node.iota.moe:443",
-              "https://wallet1.iota.town:443",
-              "https://wallet2.iota.town:443",
-              "http://node03.iotatoken.nl:15265",
-              "https://node.iota-tangle.io:14265",
-              "https://pow4.iota.community:443",
-              "https://dyn.tangle-nodes.com:443",
-              "https://pow5.iota.community:443",
-              "http://node04.iotatoken.nl:14265",
-              "http://node05.iotatoken.nl:16265",
-            },
-            5000),
-          new PoWSrvService());
-        return iotaRepository;
-      }
+      await repository.PublishInvoiceAsync(invoice, Encryption.CreateKey());
+
+      var metadata = await repository.LoadInvoiceInformationAsync(invoice);
+
+      Assert.AreEqual(Convert.ToBase64String(expectedHash), Convert.ToBase64String(metadata.Hash));
     }
   }
 }
