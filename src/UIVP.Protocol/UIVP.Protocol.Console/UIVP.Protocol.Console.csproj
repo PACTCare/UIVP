@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\UIVP.Protocol.Core.Iota\UIVP.Protocol.Core.Iota.csproj" />
     <ProjectReference Include="..\UIVP.Protocol.Core\UIVP.Protocol.Core.csproj" />
   </ItemGroup>
 

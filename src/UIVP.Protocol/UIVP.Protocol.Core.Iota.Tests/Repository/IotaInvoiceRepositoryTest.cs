@@ -1,6 +1,7 @@
 ﻿namespace UIVP.Protocol.Core.Iota.Tests.Repository
 {
   using System;
+  using System.Security.Cryptography;
   using System.Threading.Tasks;
 
   using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,7 +23,12 @@
     [TestMethod]
     public async Task TestPublishReceiveFlow()
     {
-      var repository = new IotaInvoiceRepository(ResourceProvider.Repository, new Mock<IPublicKeyRepository>().Object);
+      var cngKey = Encryption.CreateSignatureScheme();
+
+      var publicKeyRepository = new Mock<IPublicKeyRepository>();
+      publicKeyRepository.Setup(p => p.GetCompanyPublicKeyAsync(It.IsAny<string>())).ReturnsAsync(cngKey.Key.Export(CngKeyBlobFormat.EccFullPublicBlob));
+
+      var repository = new IotaInvoiceRepository(ResourceProvider.Repository, publicKeyRepository.Object);
       var invoice = new Invoice
                       {
                         KvkNumber = "1231455",
@@ -33,10 +39,11 @@
 
       var expectedHash = invoice.CreateHash(HashType.SHA2_256);
 
-      await repository.PublishInvoiceAsync(invoice, Encryption.CreateKey());
+      await repository.PublishInvoiceAsync(invoice, cngKey.Key);
       var metadata = await repository.LoadInvoiceInformationAsync(invoice);
 
       Assert.AreEqual(Convert.ToBase64String(expectedHash), Convert.ToBase64String(metadata.Hash));
+      Assert.IsTrue(await repository.ValidateInvoiceAsync(invoice));
     }
   }
 }
