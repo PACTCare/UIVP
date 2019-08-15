@@ -13,9 +13,15 @@
 
   public class ImageInvoiceParser : IInvoiceParser
   {
-    private const string SubscriptionKey = "8ee262d67631426ea2ce716529848bb9";
+    private string SubscriptionKey { get; }
 
-    private const string UriBase = "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/ocr";
+    private string ApiUri { get; }
+
+    public ImageInvoiceParser(string apiUri, string subscriptionKey)
+    {
+      this.SubscriptionKey = subscriptionKey;
+      this.ApiUri = apiUri;
+    }
 
     /// <inheritdoc />
     public async Task<Invoice> ParseInvoiceAsync(string pathToInvoice)
@@ -23,10 +29,10 @@
       var client = new HttpClient();
 
       // Request headers.
-      client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", SubscriptionKey);
+      client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", this.SubscriptionKey);
 
       var requestParameters = "language=unk&detectOrientation=true";
-      var uri = UriBase + "?" + requestParameters;
+      var uri = this.ApiUri + "?" + requestParameters;
 
       HttpResponseMessage response;
       var byteData = GetImageAsByteArray(pathToInvoice);
@@ -48,6 +54,8 @@
     {
       var kvkNumber = string.Empty;
       var bankAccount = string.Empty;
+      var address = string.Empty;
+      var amount = 0.00d;
 
       foreach (var imageRegion in parsedImage.regions)
       {
@@ -60,12 +68,27 @@
 
           if (line.words.Any(l => l.text.ToLower().Contains("bank")))
           {
-            bankAccount = line.words[1].text + line.words[2].text + line.words[3].text + line.words[4].text + line.words[5].text;
+            line.words.Skip(1).Take(line.words.Count - 1).ToList().ForEach(w => bankAccount += w.text);
+          }
+
+          if (line.words.Any(l => l.text.ToLower().Contains("address")))
+          {
+            line.words.Skip(1).Take(line.words.Count - 1).ToList().ForEach(w => address += $" {w.text}");
+          }
+
+          if (line.words.Any(l => l.text.ToLower() == "total"))
+          {
+            var possibleAmount = imageRegion.lines.Last().words.Last().text;
+
+            if (possibleAmount.Contains('.'))
+            {
+              double.TryParse(possibleAmount.Replace('.', ','), out amount);
+            }
           }
         }
       }
 
-      return new Invoice { KvkNumber = kvkNumber, BankAccountNumber = bankAccount, IssuerAddress = "", Amount = 0.00d };
+      return new Invoice { KvkNumber = kvkNumber, BankAccountNumber = bankAccount, IssuerAddress = address.TrimStart(' '), Amount = amount };
     }
 
     private static byte[] GetImageAsByteArray(string imageFilePath)

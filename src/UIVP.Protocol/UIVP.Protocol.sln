@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIVP.Protocol.Core.Iota", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIVP.Protocol.Core.Iota.Tests", "UIVP.Protocol.Core.Iota.Tests\UIVP.Protocol.Core.Iota.Tests.csproj", "{66C932F6-E956-4CCA-BB60-8B70169E8774}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIVP.Protocol.Console", "UIVP.Protocol.Console\UIVP.Protocol.Console.csproj", "{EF579D25-4BC8-4DD3-BD24-5B1B02C0A6AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,14 @@ Global
 		{66C932F6-E956-4CCA-BB60-8B70169E8774}.Release|Any CPU.Build.0 = Release|Any CPU
 		{66C932F6-E956-4CCA-BB60-8B70169E8774}.Release|x86.ActiveCfg = Release|Any CPU
 		{66C932F6-E956-4CCA-BB60-8B70169E8774}.Release|x86.Build.0 = Release|Any CPU
+		{EF579D25-4BC8-4DD3-BD24-5B1B02C0A6AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF579D25-4BC8-4DD3-BD24-5B1B02C0A6AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF579D25-4BC8-4DD3-BD24-5B1B02C0A6AD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF579D25-4BC8-4DD3-BD24-5B1B02C0A6AD}.Debug|x86.Build.0 = Debug|Any CPU
+		{EF579D25-4BC8-4DD3-BD24-5B1B02C0A6AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF579D25-4BC8-4DD3-BD24-5B1B02C0A6AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF579D25-4BC8-4DD3-BD24-5B1B02C0A6AD}.Release|x86.ActiveCfg = Release|Any CPU
+		{EF579D25-4BC8-4DD3-BD24-5B1B02C0A6AD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
