@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UIVP.Protocol.Core\UIVP.Protocol.Core.csproj" />
-    <ProjectReference Include="..\UIVP.Protocol.Image.Recognition\UIVP.Protocol.Image.Recognition.csproj" />
   </ItemGroup>
 
 </Project>

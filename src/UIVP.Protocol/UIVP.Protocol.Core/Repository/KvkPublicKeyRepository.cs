@@ -9,11 +9,11 @@
 
   using RestSharp;
 
-  public class RestKvkRepository : IKvkRepository
+  public class KvkPublicKeyRepository : IPublicKeyRepository
   {
     private IRestClient Client { get; }
 
-    public RestKvkRepository(IRestClient client)
+    public KvkPublicKeyRepository(IRestClient client)
     {
       this.Client = client;
     }

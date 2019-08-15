@@ -7,13 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIVP.Protocol.Core", "UIVP.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIVP.Protocol.Core.Tests", "UIVP.Protocol.Core.Tests\UIVP.Protocol.Core.Tests.csproj", "{BBC278CF-F03E-4C24-B464-D36FDA8F35E6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIVP.Protocol.Image.Recognition", "UIVP.Protocol.Image.Recognition\UIVP.Protocol.Image.Recognition.csproj", "{C01AECB7-2AA6-4A34-92AE-7FBF0B619986}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIVP.Protocol.Integration.Tests", "UIVP.Protocol.Integration.Tests\UIVP.Protocol.Integration.Tests.csproj", "{4321190C-4A12-44ED-A22C-F67203D41FD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIVP.Protocol.Core.Iota", "UIVP.Protocol.Core.Iota\UIVP.Protocol.Core.Iota.csproj", "{477FAFE7-253F-4609-A85E-DB62EF772249}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIVP.Protocol.Core.Iota", "UIVP.Protocol.Core.Iota\UIVP.Protocol.Core.Iota.csproj", "{477FAFE7-253F-4609-A85E-DB62EF772249}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIVP.Protocol.Core.Iota.Tests", "UIVP.Protocol.Core.Iota.Tests\UIVP.Protocol.Core.Iota.Tests.csproj", "{66C932F6-E956-4CCA-BB60-8B70169E8774}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIVP.Protocol.Core.Iota.Tests", "UIVP.Protocol.Core.Iota.Tests\UIVP.Protocol.Core.Iota.Tests.csproj", "{66C932F6-E956-4CCA-BB60-8B70169E8774}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,14 +37,6 @@ Global
 		{BBC278CF-F03E-4C24-B464-D36FDA8F35E6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BBC278CF-F03E-4C24-B464-D36FDA8F35E6}.Release|x86.ActiveCfg = Release|Any CPU
 		{BBC278CF-F03E-4C24-B464-D36FDA8F35E6}.Release|x86.Build.0 = Release|Any CPU
-		{C01AECB7-2AA6-4A34-92AE-7FBF0B619986}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C01AECB7-2AA6-4A34-92AE-7FBF0B619986}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C01AECB7-2AA6-4A34-92AE-7FBF0B619986}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C01AECB7-2AA6-4A34-92AE-7FBF0B619986}.Debug|x86.Build.0 = Debug|Any CPU
-		{C01AECB7-2AA6-4A34-92AE-7FBF0B619986}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C01AECB7-2AA6-4A34-92AE-7FBF0B619986}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C01AECB7-2AA6-4A34-92AE-7FBF0B619986}.Release|x86.ActiveCfg = Release|Any CPU
-		{C01AECB7-2AA6-4A34-92AE-7FBF0B619986}.Release|x86.Build.0 = Release|Any CPU
 		{4321190C-4A12-44ED-A22C-F67203D41FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4321190C-4A12-44ED-A22C-F67203D41FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4321190C-4A12-44ED-A22C-F67203D41FD4}.Debug|x86.ActiveCfg = Debug|Any CPU

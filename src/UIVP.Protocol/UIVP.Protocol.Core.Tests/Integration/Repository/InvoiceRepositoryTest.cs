@@ -30,7 +30,7 @@
       var dltPayload = new InvoiceMetadata(Encoding.UTF8.GetBytes("Somebody once told me"),
         Encoding.UTF8.GetBytes("the world is gonna roll me"));
 
-      var invoiceRepository = new InMemoryInvoiceRepository(new Mock<IKvkRepository>().Object, dltPayload);
+      var invoiceRepository = new InMemoryInvoiceRepository(new Mock<IPublicKeyRepository>().Object, dltPayload);
 
       Assert.IsFalse(await invoiceRepository.ValidateInvoiceAsync(this.Invoice));
     }
@@ -43,7 +43,7 @@
       var dltPayload = new InvoiceMetadata(this.Invoice.CreateHash(HashType.SHA2_256),
         signatureScheme.SignData(Encoding.UTF8.GetBytes("Somebody once told me the world is gonna roll me")));
 
-      var kvkRepository = new Mock<IKvkRepository>();
+      var kvkRepository = new Mock<IPublicKeyRepository>();
       kvkRepository.Setup(k => k.GetCompanyPublicKeyAsync(It.IsAny<string>()))
         .ReturnsAsync(signatureScheme.Key.Export(CngKeyBlobFormat.EccFullPublicBlob));
 
@@ -57,7 +57,7 @@
     {
       var signatureScheme = Encryption.CreateSignatureScheme();
 
-      var kvkRepository = new Mock<IKvkRepository>();
+      var kvkRepository = new Mock<IPublicKeyRepository>();
       kvkRepository.Setup(k => k.GetCompanyPublicKeyAsync(It.IsAny<string>()))
         .ReturnsAsync(signatureScheme.Key.Export(CngKeyBlobFormat.EccFullPublicBlob));
 

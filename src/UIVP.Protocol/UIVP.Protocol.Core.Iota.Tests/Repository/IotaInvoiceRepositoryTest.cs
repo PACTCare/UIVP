@@ -22,7 +22,7 @@
     [TestMethod]
     public async Task TestPublishReceiveFlow()
     {
-      var repository = new IotaInvoiceRepository(ResourceProvider.Repository, new Mock<IKvkRepository>().Object);
+      var repository = new IotaInvoiceRepository(ResourceProvider.Repository, new Mock<IPublicKeyRepository>().Object);
       var invoice = new Invoice
                       {
                         KvkNumber = "1231455",

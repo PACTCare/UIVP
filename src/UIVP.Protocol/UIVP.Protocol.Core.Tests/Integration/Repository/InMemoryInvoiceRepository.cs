@@ -9,8 +9,8 @@
   public class InMemoryInvoiceRepository : InvoiceRepository
   {
     /// <inheritdoc />
-    public InMemoryInvoiceRepository(IKvkRepository kvkRepository, InvoiceMetadata dataToReturn)
-      : base(kvkRepository)
+    public InMemoryInvoiceRepository(IPublicKeyRepository publicKeyRepository, InvoiceMetadata dataToReturn)
+      : base(publicKeyRepository)
     {
       this.DataToReturn = dataToReturn;
     }

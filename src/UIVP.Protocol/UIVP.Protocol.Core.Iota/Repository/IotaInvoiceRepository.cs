@@ -14,8 +14,8 @@
 
   public class IotaInvoiceRepository : InvoiceRepository
   {
-    public IotaInvoiceRepository(IIotaRepository iotaRepository, IKvkRepository kvkRepository)
-      : base(kvkRepository)
+    public IotaInvoiceRepository(IIotaRepository iotaRepository, IPublicKeyRepository publicKeyRepository)
+      : base(publicKeyRepository)
     {
       this.IotaRepository = iotaRepository;
     }

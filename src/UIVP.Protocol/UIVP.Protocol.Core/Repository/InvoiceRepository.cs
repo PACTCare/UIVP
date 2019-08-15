@@ -11,12 +11,12 @@
 
   public abstract class InvoiceRepository
   {
-    protected InvoiceRepository(IKvkRepository kvkRepository)
+    protected InvoiceRepository(IPublicKeyRepository publicKeyRepository)
     {
-      this.KvkRepository = kvkRepository;
+      this.PublicKeyRepository = publicKeyRepository;
     }
 
-    private IKvkRepository KvkRepository { get; }
+    private IPublicKeyRepository PublicKeyRepository { get; }
 
     public abstract Task PublishInvoiceAsync(Invoice invoice, CngKey key);
 
@@ -30,7 +30,7 @@
         return false;
       }
 
-      var companyPublicKey = await this.KvkRepository.GetCompanyPublicKeyAsync(invoice.KvkNumber);
+      var companyPublicKey = await this.PublicKeyRepository.GetCompanyPublicKeyAsync(invoice.KvkNumber);
       var key = CngKey.Import(companyPublicKey, CngKeyBlobFormat.EccFullPublicBlob);
       var signatureScheme = Encryption.CreateSignatureScheme(key);
 

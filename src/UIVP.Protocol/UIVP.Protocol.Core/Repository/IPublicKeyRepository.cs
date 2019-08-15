@@ -3,7 +3,7 @@
   using System.Security.Cryptography;
   using System.Threading.Tasks;
 
-  public interface IKvkRepository
+  public interface IPublicKeyRepository
   {
     Task<byte[]> GetCompanyPublicKeyAsync(string kvkNumber);
 
