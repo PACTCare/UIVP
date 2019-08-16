@@ -7,6 +7,8 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="RestSharp" Version="106.6.9" />
+    <PackageReference Include="SQLite" Version="3.13.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.111" />
   </ItemGroup>
 
   <ItemGroup>

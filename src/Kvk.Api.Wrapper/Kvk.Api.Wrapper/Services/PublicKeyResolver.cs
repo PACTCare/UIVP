@@ -1,43 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-
-namespace Kvk.Api.Wrapper.Services
+﻿namespace Kvk.Api.Wrapper.Services
 {
+  using System;
+  using System.Data.SQLite;
+  using System.IO;
+
   public static class PublicKeyResolver
   {
-    public static Dictionary<string, string> PublicKeyLookup { get; set; }
-
-    static PublicKeyResolver()
-    {
-      PublicKeyLookup = new Dictionary<string, string>();
-    }
-
     public static void Add(string kvkNumber, string publicKey)
     {
-      if (!PublicKeyLookup.ContainsKey(kvkNumber))
+      InitDatabase();
+
+      using (var connection = new SQLiteConnection("Data Source=publickeys.sqlite;Version=3;"))
       {
-        PublicKeyLookup.Add(kvkNumber, publicKey);
-      }
-      else
-      {
-        PublicKeyLookup.Remove(kvkNumber);
-        PublicKeyLookup.Add(kvkNumber, publicKey);
+        connection.Open();
+
+        using (var command = new SQLiteCommand($"INSERT OR REPLACE INTO PublicKeys (KvkNumber, PublicKey) VALUES ('{kvkNumber}', '{publicKey}')", connection))
+        {
+          command.ExecuteNonQuery();
+        }
       }
     }
 
     public static string GetPublicKey(string kvkNumber)
     {
-      return !PublicKeyLookup.ContainsKey(kvkNumber)
-        ? string.Empty
-        : PublicKeyLookup.First(p => p.Key == kvkNumber).Value;
+      InitDatabase();
+
+      using (var connection = new SQLiteConnection("Data Source=publickeys.sqlite;Version=3;"))
+      {
+        connection.Open();
+
+        using (var command = new SQLiteCommand($"SELECT PublicKey FROM PublicKeys WHERE KvkNumber='{kvkNumber}'", connection))
+        {
+          var result = command.ExecuteScalar();
+          return result == null ? string.Empty : result.ToString();
+        }
+      }
     }
 
-    public static dynamic AddPublicKeyToCompany(dynamic parsedJson)
+    private static void InitDatabase()
     {
-      return parsedJson;
+      if (File.Exists("publickeys.sqlite"))
+      {
+        return;
+      }
+
+      SQLiteConnection.CreateFile("publickeys.sqlite");
+
+      using (var connection = new SQLiteConnection("Data Source=publickeys.sqlite;Version=3;"))
+      {
+        connection.Open();
+
+        using (var command = new SQLiteCommand("CREATE TABLE PublicKeys (KvkNumber TEXT NOT NULL PRIMARY KEY, PublicKey TEXT NOT NULL)", connection))
+        {
+          command.ExecuteNonQuery();
+        }
+      }
     }
   }
 }
