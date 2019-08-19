@@ -2,10 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>PACT Care</Authors>
+    <Company>PACT Care</Company>
+    <Description>Protocol to sign and verify invoices</Description>
+    <Copyright>PACT Care 2019</Copyright>
+    <PackageLicenseUrl>https://github.com/PACTCare/UIVP/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PACTCare/UIVP</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PACTCare/UIVP</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <PackageTags>invoice dlt verification</PackageTags>
+    <Version>0.1</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Moq" Version="4.10.1" />
     <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="RestSharp" Version="106.6.9" />

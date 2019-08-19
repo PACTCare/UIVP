@@ -2,14 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.1</Version>
+    <Authors>PACT Care</Authors>
+    <Company>PACT Care</Company>
+    <Description>Protocol to sign and verify invoices, data storage on IOTA Tangle</Description>
+    <Copyright>PACT Care 2019</Copyright>
+    <PackageLicenseUrl>https://github.com/PACTCare/UIVP/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PACTCare/UIVP</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PACTCare/UIVP</RepositoryUrl>
+    <PackageTags>invoice dlt verification iota</PackageTags>
+    <RepositoryType>github</RepositoryType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Tangle.Net.Standard" Version="3.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\UIVP.Protocol.Core\UIVP.Protocol.Core.csproj" />
+    <PackageReference Include="UIVP.Protocol.Core" Version="0.1.0" />
   </ItemGroup>
 
 </Project>
