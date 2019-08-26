@@ -43,7 +43,7 @@
       var metadata = await repository.LoadInvoiceInformationAsync(invoice);
 
       Assert.AreEqual(Convert.ToBase64String(expectedHash), Convert.ToBase64String(metadata.Hash));
-      Assert.IsTrue(await repository.ValidateInvoiceAsync(invoice));
+      Assert.AreEqual(VerificationStatus.Success, await repository.VerifyInvoiceAsync(invoice));
     }
   }
 }

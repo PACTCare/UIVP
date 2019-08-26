@@ -19,7 +19,7 @@
       var backFromTrytes = trytes.ToInvoiceMetadata();
 
       Assert.AreEqual("EkCQYgCeyPNl9ZeNfyI92lMpQYyDkOQMEG1fN4MXr3zRUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Convert.ToBase64String(backFromTrytes.Hash));
-      Assert.AreEqual("EkCQYgCeyPNl9ZeNfyI92lMpQYyDkOQMEG1fN4MXr3zRUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Convert.ToBase64String(backFromTrytes.Signature));
+      Assert.AreEqual("EkCQYgCeyPNl9ZeNfyI92lMpQYyDkOQMEG1fN4MXr3zRUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==", Convert.ToBase64String(backFromTrytes.Signature));
     }
   }
 }

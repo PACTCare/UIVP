@@ -32,7 +32,7 @@
 
       var invoiceRepository = new InMemoryInvoiceRepository(new Mock<IPublicKeyRepository>().Object, dltPayload);
 
-      Assert.IsFalse(await invoiceRepository.ValidateInvoiceAsync(this.Invoice));
+      Assert.AreEqual(VerificationStatus.HashMismatch, await invoiceRepository.VerifyInvoiceAsync(this.Invoice));
     }
 
     [TestMethod]
@@ -49,7 +49,7 @@
 
       var invoiceRepository = new InMemoryInvoiceRepository(kvkRepository.Object, dltPayload);
 
-      Assert.IsFalse(await invoiceRepository.ValidateInvoiceAsync(this.Invoice));
+      Assert.AreEqual(VerificationStatus.InvalidSignature, await invoiceRepository.VerifyInvoiceAsync(this.Invoice));
     }
 
     [TestMethod]
@@ -64,7 +64,7 @@
       var invoiceRepository = new InMemoryInvoiceRepository(kvkRepository.Object, null);
       await invoiceRepository.PublishInvoiceAsync(this.Invoice, signatureScheme.Key);
 
-      Assert.IsTrue(await invoiceRepository.ValidateInvoiceAsync(this.Invoice));
+      Assert.AreEqual(VerificationStatus.Success, await invoiceRepository.VerifyInvoiceAsync(this.Invoice));
     }
   }
 }

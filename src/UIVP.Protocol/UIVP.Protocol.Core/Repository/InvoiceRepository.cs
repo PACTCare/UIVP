@@ -18,35 +18,57 @@
 
     private IPublicKeyRepository PublicKeyRepository { get; }
 
+    public abstract Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice);
+
     public abstract Task PublishInvoiceAsync(Invoice invoice, CngKey key);
 
-    public async Task<bool> ValidateInvoiceAsync(Invoice invoice)
+    public async Task<VerificationStatus> VerifyInvoiceAsync(Invoice invoice)
     {
       var hashedInvoice = this.HashInvoice(invoice);
-      var invoiceEntry = await this.LoadInvoiceInformationAsync(invoice);
+      InvoiceMetadata invoiceEntry;
+
+      try
+      {
+        invoiceEntry = await this.LoadInvoiceInformationAsync(invoice);
+      }
+      catch
+      {
+        return VerificationStatus.MetadataUnavailable;
+      }
 
       if (!hashedInvoice.SequenceEqual(invoiceEntry.Hash))
       {
-        return false;
+        return VerificationStatus.HashMismatch;
       }
 
-      var companyPublicKey = await this.PublicKeyRepository.GetCompanyPublicKeyAsync(invoice.KvkNumber);
+      byte[] companyPublicKey;
+      try
+      {
+        companyPublicKey = await this.PublicKeyRepository.GetCompanyPublicKeyAsync(invoice.KvkNumber);
+        if (companyPublicKey.Length == 0)
+        {
+          return VerificationStatus.PublicKeyNotFound;
+        }
+      }
+      catch
+      {
+        return VerificationStatus.KvkNumberUnavailable;
+      }
+
       var key = CngKey.Import(companyPublicKey, CngKeyBlobFormat.EccFullPublicBlob);
       var signatureScheme = Encryption.CreateSignatureScheme(key);
 
-      return signatureScheme.VerifyData(invoice.Payload, invoiceEntry.Signature);
+      return signatureScheme.VerifyData(invoice.Payload, invoiceEntry.Signature) ? VerificationStatus.Success : VerificationStatus.InvalidSignature;
+    }
+
+    protected virtual InvoiceMetadata HashAndSign(Invoice invoice, CngKey key)
+    {
+      return new InvoiceMetadata(this.HashInvoice(invoice), Encryption.CreateSignatureScheme(key).SignData(invoice.Payload));
     }
 
     protected virtual byte[] HashInvoice(Invoice invoice)
     {
       return invoice.CreateHash(HashType.SHA2_256);
     }
-
-    protected virtual InvoiceMetadata HashAndSign(Invoice invoice, CngKey key)
-    {
-      return new InvoiceMetadata(this.HashInvoice(invoice),  Encryption.CreateSignatureScheme(key).SignData(invoice.Payload));
-    }
-
-    public abstract Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice);
   }
 }

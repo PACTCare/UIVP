@@ -45,14 +45,11 @@ namespace UIVP.Protocol.Console
       // parse invoice data with the help of azure
       var invoice = await imageService.ParseInvoiceAsync("..\\..\\..\\IMG_20190413_192812.jpg");
 
-      // add randomness, so the generated storage address will differ. For testing only
-      invoice.BankAccountNumber += Seed.Random().Value;
-
       // publish the invoice in hash and signed form
       await invoiceRepository.PublishInvoiceAsync(invoice, cngKey.Key);
 
       // validate the invoice
-      var isValid = await invoiceRepository.ValidateInvoiceAsync(invoice);
+      var isValid = await invoiceRepository.VerifyInvoiceAsync(invoice);
       Console.WriteLine(isValid);
     }
   }
