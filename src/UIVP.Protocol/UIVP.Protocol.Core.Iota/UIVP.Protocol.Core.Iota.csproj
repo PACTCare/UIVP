@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <Authors>PACT Care</Authors>
     <Company>PACT Care</Company>
     <Description>Protocol to sign and verify invoices, data storage on IOTA Tangle</Description>
@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="Tangle.Net.Standard" Version="3.1.0" />
-    <PackageReference Include="UIVP.Protocol.Core" Version="0.1.1" />
+    <PackageReference Include="UIVP.Protocol.Core" Version="0.1.2" />
   </ItemGroup>
 
 </Project>

@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/PACTCare/UIVP</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <PackageTags>invoice dlt verification</PackageTags>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 

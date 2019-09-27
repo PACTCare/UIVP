@@ -24,9 +24,10 @@
     }
 
     /// <inheritdoc />
-    public override async Task PublishInvoiceAsync(Invoice invoice, CngKey key)
+    public override async Task<PublishStatus> PublishInvoiceAsync(Invoice invoice, CngKey key)
     {
       this.DataToReturn = this.HashAndSign(invoice, key);
+      return PublishStatus.Success;
     }
   }
 }

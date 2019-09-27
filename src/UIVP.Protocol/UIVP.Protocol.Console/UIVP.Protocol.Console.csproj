@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
-    <PackageReference Include="UIVP.Protocol.Core.Iota" Version="0.1.1" />
+    <PackageReference Include="UIVP.Protocol.Core.Iota" Version="0.1.2" />
   </ItemGroup>
 
 </Project>

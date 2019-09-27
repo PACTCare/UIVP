@@ -20,7 +20,7 @@
 
     public abstract Task<InvoiceMetadata> LoadInvoiceInformationAsync(Invoice invoice);
 
-    public abstract Task PublishInvoiceAsync(Invoice invoice, CngKey key);
+    public abstract Task<PublishStatus> PublishInvoiceAsync(Invoice invoice, CngKey key);
 
     public async Task<VerificationStatus> VerifyInvoiceAsync(Invoice invoice)
     {

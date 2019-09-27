@@ -23,10 +23,16 @@
     private IIotaRepository IotaRepository { get; }
 
     /// <inheritdoc />
-    public override async Task PublishInvoiceAsync(Invoice invoice, CngKey key)
+    public override async Task<PublishStatus> PublishInvoiceAsync(Invoice invoice, CngKey key)
     {
       var invoiceMetadata = this.HashAndSign(invoice, key);
       var address = TryteString.FromBytes(invoiceMetadata.Hash).GetChunk(0, 81);
+
+      var existingTransactions = await this.IotaRepository.FindTransactionsByAddressesAsync(new List<Address> { new Address(address.Value) });
+      if (existingTransactions.Hashes.Count > 0)
+      {
+        return PublishStatus.AlreadyPublished;
+      }
 
       var bundle = new Bundle();
       bundle.AddTransfer(
@@ -42,6 +48,7 @@
       bundle.Sign();
 
       await this.IotaRepository.SendTrytesAsync(bundle.Transactions, 2);
+      return PublishStatus.Success;
     }
 
     /// <inheritdoc />
